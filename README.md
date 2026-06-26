@@ -24,7 +24,7 @@ Dentro da pasta `Roadmap`, você encontrará todos os arquivos e fluxos detalhad
 Para manter a motivação e rastrear o avanço através das fases e módulos, construímos um **Dashboard Interativo** que cruza as metas concluídas com os objetivos pendentes.
 > *Abra o arquivo `dashboard.html` no seu navegador para ver o status em tempo real das conquistas deste Roadmap.*
 
-![Print do Dashboard de Progresso](https://via.placeholder.com/800x400?text=Substitua+este+link+por+uma+foto+do+seu+Dashboard)
+![Print do Dashboard de Progresso](./dashboard.png)
 
 ### 📓 Configuração dos Notebooks (`.ipynb`)
 Toda a parte prática é conduzida através de **Jupyter Notebooks**, configurados com explicações visuais e ricas em markdown.
@@ -56,7 +56,7 @@ Inside the `Roadmap` folder, you will find all the detailed files and flows that
 To maintain motivation and track progress through the phases and modules, we built an **Interactive Dashboard** that crosses completed goals with pending objectives.
 > *Open the `dashboard.html` file in your browser to see the real-time status of this Roadmap's achievements.*
 
-![Progress Dashboard Screenshot](https://via.placeholder.com/800x400?text=Replace+this+link+with+a+photo+of+your+Dashboard)
+![Progress Dashboard Screenshot](./dashboard.png)
 
 ### 📓 Notebooks Configuration (`.ipynb`)
 All practical work is conducted through **Jupyter Notebooks**, configured with visual and markdown-rich explanations.
