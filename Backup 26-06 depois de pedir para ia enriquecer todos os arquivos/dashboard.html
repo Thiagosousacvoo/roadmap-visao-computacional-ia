@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV & AI Dashboard - Neural Link</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&family=Outfit:wght@300;400;500;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #03050a;
+            --glass-bg: rgba(12, 16, 28, 0.6);
+            --glass-border: rgba(0, 240, 255, 0.15);
+            --neon-blue: #00f0ff;
+            --neon-purple: #8a2be2;
+            --neon-pink: #ff0055;
+            --text-main: #e2e8f0;
+            --text-muted: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            padding: 50px 30px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Fundo Futurista Dinâmico e Limpo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.05), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(138, 43, 226, 0.05), transparent 30%);
+            z-index: -2;
+            animation: pulse-bg 15s infinite alternate;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            perspective: 1000px;
+            transform-origin: center top;
+            animation: grid-move 30s linear infinite;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes neon-flicker {
+            0% {
+                text-shadow:
+                    0 0 4px #fff,
+                    0 0 18px var(--neon-blue),
+                    0 0 26px var(--neon-blue),
+                    0 0 34px var(--neon-blue);
+                color: #fff;
+            }
+
+            100% {
+                text-shadow:
+                    0 0 2px #fff,
+                    0 0 5px var(--neon-blue),
+                    0 0 10px var(--neon-blue),
+                    0 0 15px var(--neon-blue);
+                color: #e2e8f0;
+            }
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow: 0 0 4px #fff, 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 30px var(--neon-blue);
+            animation: neon-flicker 2s ease-in-out infinite alternate;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: var(--neon-purple);
+            text-shadow: 0 0 5px var(--neon-purple);
+            opacity: 0.9;
+        }
+
+        /* Painel Central Elegante (Sem Animação Circular Esquisita) */
+        .overall-glass {
+            background: rgba(8, 14, 25, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto 60px auto;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .overall-glass h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #fff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .progress-container-large {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            margin-bottom: 35px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-bar-large {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 1.5s ease-out;
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .overall-stats {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        /* Grid de Cartões Fases */
+        /* Ajuste para 4 colunas fixas e alturas iguais na mesma linha (stretching) */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1600px;
+            /* Levemente maior para acomodar 4 cards confortavelmente */
+            margin: 0 auto;
+        }
+
+        /* Cartão Individual Elegante */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out calc(0.1s + var(--delay)) both;
+        }
+
+        .glass:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.3);
+        }
+
+        .glass h2 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Barras Menores */
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 2px;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--neon-blue);
+            border-radius: 2px;
+            transition: width 0.8s ease-out;
+            width: 0%;
+            box-shadow: 0 0 8px var(--neon-blue);
+        }
+
+        .glass:hover .progress-bar {
+            background: var(--neon-purple);
+            box-shadow: 0 0 12px var(--neon-purple);
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            text-align: left;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Lista de Tarefas - SEM SCROLL INTERNO */
+        .tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            /* Scroll interno removido para mostrar tudo elegantemente */
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .task:hover {
+            background: rgba(0, 240, 255, 0.05);
+            transform: translateX(4px);
+        }
+
+        /* Cyber Checkbox - Perfeitamente Centralizado */
+        .checkbox-custom {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-muted);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            outline: none;
+        }
+
+        .checkbox-custom:hover {
+            border-color: var(--neon-blue);
+        }
+
+        .checkbox-custom:checked {
+            border-color: var(--neon-blue);
+            background: rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        /* V perfeitamente alinhado com top, left e transform */
+        .checkbox-custom:checked::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 9px;
+            border: solid var(--neon-blue);
+            border-width: 0 2px 2px 0;
+            transform: translate(-50%, -60%) rotate(45deg);
+        }
+
+        .task-label {
+            color: var(--text-main);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+            flex-grow: 1;
+        }
+
+        .task.completed .task-label {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .task.completed {
+            background: transparent;
+        }
+
+        /* Animações */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-bg {
+            0% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes grid-move {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(50px);
+            }
+        }
+
+        /* Responsividade Mobile */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+                letter-spacing: 2px;
+            }
+
+            .overall-glass {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .overall-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .stat-value {
+                font-size: 2.5rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .glass {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>ENGENHARIA DE VISÃO COMPUTACIONAL</h1>
+        <p>Especialista em IA & Neural Networks</p>
+    </div>
+
+    <div class="overall-glass">
+        <div class="card-header"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h2 style="margin-bottom: 0;">Progresso Neural Global</h2>
+            <input type="checkbox" class="checkbox-custom master-checkbox"
+                title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+        </div>
+        <div class="progress-container-large">
+            <div class="progress-bar-large" id="overall-bar"></div>
+        </div>
+        <div class="overall-stats">
+            <div class="stat-box">
+                <span class="stat-value" id="overall-percent">0%</span>
+                <span class="stat-label">Sincronizado</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-value" id="overall-completed">0</span>
+                <span class="stat-label">Nódulos Ativados</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-value" id="overall-remaining">101</span>
+                <span class="stat-label">Restantes</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+
+        <div class="card glass" style="--delay: 0.0s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 00: Fundamentos Python</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/9 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_0">
+                    <label class="task-label" for="task_cyber_0">Bloco 01 Ambiente</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_1">
+                    <label class="task-label" for="task_cyber_1">Bloco 02 Fundamentos Python</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_2">
+                    <label class="task-label" for="task_cyber_2">Bloco 03 Python Intermediario</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_3">
+                    <label class="task-label" for="task_cyber_3">Bloco 04 POO</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_4">
+                    <label class="task-label" for="task_cyber_4">Bloco 05 2 Pandas</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_5">
+                    <label class="task-label" for="task_cyber_5">Bloco 05 3 Matplotlib</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_6">
+                    <label class="task-label" for="task_cyber_6">Bloco 05 NumPy</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_7">
+                    <label class="task-label" for="task_cyber_7">Bloco 07 Qualidade de Codigo</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_8">
+                    <label class="task-label" for="task_cyber_8">Projeto Final</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.05s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 01: Matematica para IA</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/11 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_9">
+                    <label class="task-label" for="task_cyber_9">Bloco 01 Vetores</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_10">
+                    <label class="task-label" for="task_cyber_10">Bloco 02 Matrizes</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_11">
+                    <label class="task-label" for="task_cyber_11">Bloco 03 Sistemas Lineares</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_12">
+                    <label class="task-label" for="task_cyber_12">Bloco 04 Transformacoes Lineares</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_13">
+                    <label class="task-label" for="task_cyber_13">Bloco 05 Autovalores e Autovetores</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_14">
+                    <label class="task-label" for="task_cyber_14">Bloco 05 Sistemas Lineares</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_15">
+                    <label class="task-label" for="task_cyber_15">Bloco 06 Calculo para IA</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_16">
+                    <label class="task-label" for="task_cyber_16">Bloco 06 Transformacoes Lineares</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_17">
+                    <label class="task-label" for="task_cyber_17">Bloco 07 Autovalores e Autovetores</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_18">
+                    <label class="task-label" for="task_cyber_18">Bloco 07 Probabilidade e Estatistica</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_19">
+                    <label class="task-label" for="task_cyber_19">Projeto Final</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.1s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 02: Machine Learning Classico</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/6 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_20">
+                    <label class="task-label" for="task_cyber_20">Bloco 01 Fundamentos</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_21">
+                    <label class="task-label" for="task_cyber_21">Bloco 02 Algoritmos</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_22">
+                    <label class="task-label" for="task_cyber_22">Bloco 03 Avaliacao</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_23">
+                    <label class="task-label" for="task_cyber_23">Bloco 04 Ajuste de Modelo e Hiperparametros</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_24">
+                    <label class="task-label" for="task_cyber_24">Bloco 04 Ajuste e Regularizacao</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_25">
+                    <label class="task-label" for="task_cyber_25">Projeto Final</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.15000000000000002s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 03: Visao Computacional Classica</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/5 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_26">
+                    <label class="task-label" for="task_cyber_26">Bloco 01 Imagem como Matriz</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_27">
+                    <label class="task-label" for="task_cyber_27">Bloco 02 Convolucao Matematica</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_28">
+                    <label class="task-label" for="task_cyber_28">Bloco 03 OpenCV Classico</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_29">
+                    <label class="task-label" for="task_cyber_29">Bloco 04 Processamento de Video</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_30">
+                    <label class="task-label" for="task_cyber_30">Projetos Finais</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.2s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 04: Deep Learning Fundamentals</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/9 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_31">
+                    <label class="task-label" for="task_cyber_31">Bloco 00 Tensores</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_32">
+                    <label class="task-label" for="task_cyber_32">Bloco 01 Perceptron</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_33">
+                    <label class="task-label" for="task_cyber_33">Bloco 02 Backpropagation</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_34">
+                    <label class="task-label" for="task_cyber_34">Bloco 03 Ativacao e Treinamento</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_35">
+                    <label class="task-label" for="task_cyber_35">Bloco 04 PyTorch em Producao</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_36">
+                    <label class="task-label" for="task_cyber_36">Bloco 05 Tensores e Operacoes Avancadas</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_37">
+                    <label class="task-label" for="task_cyber_37">Bloco 06 O Perceptron Matematico</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_38">
+                    <label class="task-label" for="task_cyber_38">Bloco 07 Conceitos Criticos Overfitting e
+                        Batches</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_39">
+                    <label class="task-label" for="task_cyber_39">Projeto Final MNIST</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.25s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 05: CNNs e Transfer Learning</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/11 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_40">
+                    <label class="task-label" for="task_cyber_40">Bloco 01 A Camada Conv2d</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_41">
+                    <label class="task-label" for="task_cyber_41">Bloco 02 Feature Maps</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_42">
+                    <label class="task-label" for="task_cyber_42">Bloco 03 O Pipeline Visual</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_43">
+                    <label class="task-label" for="task_cyber_43">Bloco 04 Sua Primeira CNN</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_44">
+                    <label class="task-label" for="task_cyber_44">Bloco 05 A Camada Convolucional no PyTorch</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_45">
+                    <label class="task-label" for="task_cyber_45">Bloco 05 Data Augmentation</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_46">
+                    <label class="task-label" for="task_cyber_46">Bloco 06 Historia e ResNets</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_47">
+                    <label class="task-label" for="task_cyber_47">Bloco 06 Primeira CNN MNIST CIFAR</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_48">
+                    <label class="task-label" for="task_cyber_48">Bloco 07 Transfer Learning no Mundo Real</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_49">
+                    <label class="task-label" for="task_cyber_49">Bloco 08 Intro ViT</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_50">
+                    <label class="task-label" for="task_cyber_50">Projetos Finais CNN</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.30000000000000004s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 06: NLP e Transformers</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/7 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_51">
+                    <label class="task-label" for="task_cyber_51">Bloco 01 Texto em Numeros</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_52">
+                    <label class="task-label" for="task_cyber_52">Bloco 02 O Coracao do Transformer</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_53">
+                    <label class="task-label" for="task_cyber_53">Bloco 03 A Arquitetura Completa</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_54">
+                    <label class="task-label" for="task_cyber_54">Bloco 04 Vision Transformers ViT</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_55">
+                    <label class="task-label" for="task_cyber_55">Bloco 05 A Revolucao Multimodal</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_56">
+                    <label class="task-label" for="task_cyber_56">Bloco 06 Hugging Face</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_57">
+                    <label class="task-label" for="task_cyber_57">Projetos Finais Transformers</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.35000000000000003s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 07: Object Detection</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/10 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_58">
+                    <label class="task-label" for="task_cyber_58">Bloco 01 Fundamentos Bbox</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_59">
+                    <label class="task-label" for="task_cyber_59">Bloco 02 Pipeline de Dataset</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_60">
+                    <label class="task-label" for="task_cyber_60">Bloco 03 Familia YOLO</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_61">
+                    <label class="task-label" for="task_cyber_61">Bloco 04 Treinamento Customizado</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_62">
+                    <label class="task-label" for="task_cyber_62">Bloco 05 O Pipeline de Deteccao</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_63">
+                    <label class="task-label" for="task_cyber_63">Bloco 05 Rastreadores Tracking</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_64">
+                    <label class="task-label" for="task_cyber_64">Bloco 06 Como Funciona o Detector Internamente</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_65">
+                    <label class="task-label" for="task_cyber_65">Bloco 06 Deploy e FPS</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_66">
+                    <label class="task-label" for="task_cyber_66">Bloco 07 Debug e Melhoria de Deteccao</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_67">
+                    <label class="task-label" for="task_cyber_67">Projetos Finais Detection</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.4s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 08: Segmentacao</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/8 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_68">
+                    <label class="task-label" for="task_cyber_68">Bloco 01 Fundamentos da Mascara</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_69">
+                    <label class="task-label" for="task_cyber_69">Bloco 02 Funcoes de Perda e Metricas</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_70">
+                    <label class="task-label" for="task_cyber_70">Bloco 03 A Arquitetura U Net</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_71">
+                    <label class="task-label" for="task_cyber_71">Bloco 04 Refinamento e Avancados</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_72">
+                    <label class="task-label" for="task_cyber_72">Bloco 05 Foundation Models SAM</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_73">
+                    <label class="task-label" for="task_cyber_73">Bloco 06 Visualizacao de Segmentacao</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_74">
+                    <label class="task-label" for="task_cyber_74">Bloco 07 Criacao de Dataset e Anotacao</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_75">
+                    <label class="task-label" for="task_cyber_75">Projetos Finais Segmentacao</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.45s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 09: MLOps e Producao</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/10 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_76">
+                    <label class="task-label" for="task_cyber_76">Bloco 01 Serving FastAPI</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_77">
+                    <label class="task-label" for="task_cyber_77">Bloco 02 Containerizacao Docker</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_78">
+                    <label class="task-label" for="task_cyber_78">Bloco 03 Otimizacao e Filas</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_79">
+                    <label class="task-label" for="task_cyber_79">Bloco 04 Versionamento DVC</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_80">
+                    <label class="task-label" for="task_cyber_80">Bloco 05 Monitoramento e Drift</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_81">
+                    <label class="task-label" for="task_cyber_81">Bloco 06 Pipeline de Inferencia Avancado</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_82">
+                    <label class="task-label" for="task_cyber_82">Bloco 07 Cloud e Deploy Pratico</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_83">
+                    <label class="task-label" for="task_cyber_83">Bloco 08 Active Learning Detalhado</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_84">
+                    <label class="task-label" for="task_cyber_84">Bloco 09 Video em Escala</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_85">
+                    <label class="task-label" for="task_cyber_85">Projetos Finais MLOps</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.5s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 10: IA Generativa 2D</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/5 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_86">
+                    <label class="task-label" for="task_cyber_86">Bloco 01 Autoencoders e VAEs</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_87">
+                    <label class="task-label" for="task_cyber_87">Bloco 02 A Guerra das GANs</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_88">
+                    <label class="task-label" for="task_cyber_88">Bloco 03 A Revolucao da Difusao</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_89">
+                    <label class="task-label" for="task_cyber_89">Bloco 04 Aritmetica Latente</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_90">
+                    <label class="task-label" for="task_cyber_90">Projetos Finais Generativa</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.55s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 11: Visao 3D e Neural Rendering</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/5 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_91">
+                    <label class="task-label" for="task_cyber_91">Bloco 01 A Matematica da Camera</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_92">
+                    <label class="task-label" for="task_cyber_92">Bloco 02 Profundidade e Point Clouds</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_93">
+                    <label class="task-label" for="task_cyber_93">Bloco 03 Structure from Motion COLMAP</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_94">
+                    <label class="task-label" for="task_cyber_94">Bloco 04 A Revolucao Neural</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_95">
+                    <label class="task-label" for="task_cyber_95">Projetos Finais Visao 3D</label>
+                </div>
+            </div>
+        </div>
+        <div class="card glass" style="--delay: 0.6000000000000001s">
+            <div class="card-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin-bottom: 0;">Fase 12: Portfolio e Carreira</h2>
+                <input type="checkbox" class="checkbox-custom master-checkbox"
+                    title="Marcar/Desmarcar todos os módulos desta fase" style="border-color: var(--neon-purple);">
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%;"></div>
+            </div>
+            <p class="progress-text">0% COMPLETO • 0/5 MÓDULOS</p>
+            <div class="tasks">
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_96">
+                    <label class="task-label" for="task_cyber_96">Bloco 01 A Regra do Portfolio</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_97">
+                    <label class="task-label" for="task_cyber_97">Bloco 02 O Github Perfeito</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_98">
+                    <label class="task-label" for="task_cyber_98">Bloco 03 O Linkedin Inteligente</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_99">
+                    <label class="task-label" for="task_cyber_99">Bloco 04 Entrevistas e Vagas</label>
+                </div>
+                <div class="task">
+                    <input type="checkbox" class="checkbox-custom" id="task_cyber_100">
+                    <label class="task-label" for="task_cyber_100">Templates Prontos</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskCheckboxes = document.querySelectorAll('.task .checkbox-custom');
+            const totalTasks = taskCheckboxes.length;
+
+            taskCheckboxes.forEach(cb => {
+                const isChecked = localStorage.getItem(cb.id) === 'true';
+                cb.checked = isChecked;
+                updateTaskStyle(cb);
+            });
+
+
+            const masterCheckboxes = document.querySelectorAll('.master-checkbox');
+            masterCheckboxes.forEach((master, index) => {
+                master.addEventListener('change', (e) => {
+                    const isOverall = e.target.closest('.overall-glass');
+                    const container = isOverall ? document : e.target.closest('.card');
+                    const childCheckboxes = container.querySelectorAll('.task .checkbox-custom');
+                    const isChecked = e.target.checked;
+
+                    childCheckboxes.forEach(cb => {
+                        cb.checked = isChecked;
+                        localStorage.setItem(cb.id, isChecked);
+                        updateTaskStyle(cb);
+                    });
+
+                    if (isOverall) {
+                        const allCards = document.querySelectorAll('.card');
+                        allCards.forEach(c => updatePhaseProgress(c));
+                        const allMasters = document.querySelectorAll('.card .master-checkbox');
+                        allMasters.forEach(m => {
+                            m.checked = isChecked;
+                            m.style.opacity = '1';
+                            m.style.borderColor = isChecked ? 'var(--neon-blue)' : 'var(--neon-purple)';
+                        });
+                    } else {
+                        updatePhaseProgress(container);
+                        updateOverallMasterCheckbox();
+                    }
+                    updateOverallProgress();
+                });
+            });
+
+            function updateMasterCheckbox(card) {
+                const childCheckboxes = card.querySelectorAll('.task .checkbox-custom');
+                const master = card.querySelector('.master-checkbox');
+                if (!master || childCheckboxes.length === 0) return;
+
+                let allChecked = true;
+                let anyChecked = false;
+                childCheckboxes.forEach(cb => {
+                    if (cb.checked) anyChecked = true;
+                    else allChecked = false;
+                });
+
+                master.checked = allChecked;
+                master.style.opacity = allChecked ? '1' : (anyChecked ? '0.7' : '0.4');
+                // Adiciona um efeitinho visual no checkbox pai quando est parcialmente preenchido
+                if (anyChecked && !allChecked) {
+                    master.style.borderColor = 'var(--neon-pink)';
+                } else {
+                    master.style.borderColor = allChecked ? 'var(--neon-blue)' : 'var(--neon-purple)';
+                }
+            }
+
+            function updateOverallMasterCheckbox() {
+                const overallMaster = document.querySelector('.overall-glass .master-checkbox');
+                if (!overallMaster) return;
+
+                const allTasks = document.querySelectorAll('.task .checkbox-custom');
+                let allChecked = true;
+                let anyChecked = false;
+                allTasks.forEach(cb => {
+                    if (cb.checked) anyChecked = true;
+                    else allChecked = false;
+                });
+
+                overallMaster.checked = allChecked;
+                overallMaster.style.opacity = allChecked ? '1' : (anyChecked ? '0.7' : '0.4');
+                if (anyChecked && !allChecked) {
+                    overallMaster.style.borderColor = 'var(--neon-pink)';
+                } else {
+                    overallMaster.style.borderColor = allChecked ? 'var(--neon-blue)' : 'var(--neon-purple)';
+                }
+            }
+
+            setTimeout(updateAllProgress, 50);
+
+            taskCheckboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    localStorage.setItem(e.target.id, e.target.checked);
+                    updateTaskStyle(e.target);
+                    updatePhaseProgress(e.target.closest('.card'));
+                    updateMasterCheckbox(e.target.closest('.card'));
+                    updateOverallMasterCheckbox();
+                    updateOverallProgress();
+                });
+            });
+
+            function updateTaskStyle(checkbox) {
+                const taskDiv = checkbox.closest('.task');
+                if (checkbox.checked) {
+                    taskDiv.classList.add('completed');
+                } else {
+                    taskDiv.classList.remove('completed');
+                }
+            }
+
+            function updatePhaseProgress(card) {
+                const cardCheckboxes = card.querySelectorAll('.task .checkbox-custom');
+                const cardTotal = cardCheckboxes.length;
+                let cardCompleted = 0;
+
+                cardCheckboxes.forEach(cb => {
+                    if (cb.checked) cardCompleted++;
+                });
+
+                const percent = cardTotal === 0 ? 0 : Math.round((cardCompleted / cardTotal) * 100);
+
+                const progressBar = card.querySelector('.progress-bar');
+                const progressText = card.querySelector('.progress-text');
+
+                progressBar.style.width = percent + '%';
+                progressText.innerText = `${percent}% COMPLETO • ${cardCompleted}/${cardTotal} MÓDULOS`;
+            }
+
+            function updateOverallProgress() {
+                let overallCompleted = 0;
+                taskCheckboxes.forEach(cb => {
+                    if (cb.checked) overallCompleted++;
+                });
+
+                const percent = totalTasks === 0 ? 0 : Math.round((overallCompleted / totalTasks) * 100);
+                const remaining = totalTasks - overallCompleted;
+
+                document.getElementById('overall-bar').style.width = percent + '%';
+                document.getElementById('overall-percent').innerText = percent + '%';
+                document.getElementById('overall-completed').innerText = overallCompleted;
+                document.getElementById('overall-remaining').innerText = remaining;
+            }
+
+            function updateAllProgress() {
+                const cards = document.querySelectorAll('.card');
+                cards.forEach(card => { updatePhaseProgress(card); updateMasterCheckbox(card); });
+                updateOverallProgress();
+                updateOverallMasterCheckbox();
+            }
+        });
+    </script>
+</body>
+
+</html>
