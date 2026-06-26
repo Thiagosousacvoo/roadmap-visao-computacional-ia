@@ -21,5 +21,6 @@ env/
 ENV/
 .env
 
-# Scripts temporários ou scratch (se quiser subir, apague esta linha)
-# scratch/
+# Scripts temporários ou scratch
+scratch/
+gerar_dashboard.py
